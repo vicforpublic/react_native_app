@@ -20,12 +20,11 @@ class Hello extends Component {
   constructor() {
     super();
     this.state = {
-      name: "nome"
+      name: "victor"
     }
   }
-
   render() {
-    return (<Text style={styles.welcome}> Welcome! </Text>)
+    return (<Text style={styles.welcome}> Welcome, {this.state.name}. </Text>)
   }
 }
 
