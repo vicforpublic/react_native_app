@@ -48,6 +48,7 @@ class AddTodo extends Component {
 }
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
     width:"100%",
     padding:10,
     backgroundColor:'lightgray',
