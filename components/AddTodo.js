@@ -55,7 +55,11 @@ const styles = StyleSheet.create({
     flexDirection:'row'
   },
   input:{
-    flex:1
+    flex:1,
+    padding:5,
+    backgroundColor:'white',
+    borderRadius:5,
+    marginRight:10
   },
   button:{
     flexShrink:0
