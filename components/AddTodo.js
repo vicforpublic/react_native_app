@@ -29,18 +29,36 @@ class AddTodo extends Component {
 
   render() {
     return (
-      <View>
+      <View style = {styles.container}>
         <TextInput
+        style = {styles.input}
           onChangeText={text => this.onTextInput(text)}
           value={this.state.text}>
 
         </TextInput>
-        <Button title={"Add"} onPress={() => this.addTodo()}></Button>
+        <Button
+        style = {styles.button}
+         title={"Add"} 
+         onPress={() => this.addTodo()}
+         ></Button>
       </View>
-
 
     )
   }
 }
+const styles = StyleSheet.create({
+  container: {
+    width:"100%",
+    padding:10,
+    backgroundColor:'lightgray',
+    flexDirection:'row'
+  },
+  input:{
+    flex:1
+  },
+  button:{
+    flexShrink:0
+  }
+});
 
 export default AddTodo

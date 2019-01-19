@@ -9,7 +9,7 @@ class Todo extends Component {
         const { todo } = this.props
         return (
             <View>
-                <Text> {todo.text ? todo.text : "Naruto"}. </Text>
+                <Text> {todo.text ? todo.text : "Naruto"} </Text>
             </View>
 
         )
