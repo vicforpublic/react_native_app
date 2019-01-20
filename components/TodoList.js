@@ -12,6 +12,7 @@ class TodoList extends Component {
                 {todos.map(todo => {
                     return (
                         <Todo
+                            key={todo.id}
                             todo={todo}
                             navigation={this.props.navigation}>
                         </Todo>

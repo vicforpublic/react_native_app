@@ -7,7 +7,6 @@ class Todo extends Component {
     }
     render() {
         const { todo } = this.props
-        console.warn(todo.location)
         return (
             <TouchableNativeFeedback
             onPress={() => {
