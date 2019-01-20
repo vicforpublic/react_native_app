@@ -86,11 +86,30 @@ class Home extends Component {
     }
   }
 
-  setTodoLocation(id, coords) {
-    const { latitude, logitude } = coords; // useless for now
-    const { todos } = this.state;
-    todos.find(todo =>  {return(todo.id === id)} ).location = coords;
-    this.setState({ todos })
+  async setTodoLocation(id, coords) {
+    const { latitude, longitude } = coords; // useless for now
+
+    try {
+      API_KEY = "nops"
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (!data.error_message) {
+        const address = data.results.formatted_address[0];
+        const { todos } = this.state
+        todos.find(todo => todo.id === id).location = address
+        this.setState({
+          todos
+        })
+      } else {
+        throw data.status
+      }
+
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   render() {
