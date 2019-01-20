@@ -20,10 +20,14 @@ class TodoDetails extends Component {
   }
 
   render() {
+    const todo = this.props.navigation.getParam('todo')
     return (
       <View>
         <Text>
-          {this.props.navigation.getParam('text')}
+          {todo.text}
+        </Text>
+        <Text>
+          Created at: {todo.location}
         </Text>
       </View>
     )
@@ -90,14 +94,14 @@ class Home extends Component {
     const { latitude, longitude } = coords; // useless for now
 
     try {
-      API_KEY = "nops"
+      API_KEY = "sua api key"
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`
       );
       const data = await response.json();
 
       if (!data.error_message) {
-        const address = data.results.formatted_address[0];
+        const address = data.results[0].formatted_address;
         const { todos } = this.state
         todos.find(todo => todo.id === id).location = address
         this.setState({

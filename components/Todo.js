@@ -14,7 +14,7 @@ class Todo extends Component {
                   .props
                   .navigation
                   .navigate('TodoDetails', { 
-                    text: this.props.todo.text
+                    todo: todo
                   })
             }}>
                 <View style={styles.container}>
