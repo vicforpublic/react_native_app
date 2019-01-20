@@ -8,9 +8,14 @@ class TodoList extends Component {
     render() {
         const { todos } = this.props
         return (
-            <View>
+            <View style={styles.container}>
                 {todos.map(todo => {
-                    return (<Todo todo={todo}></Todo>)
+                    return (
+                        <Todo
+                            todo={todo}
+                            navigation={this.props.navigation}>
+                        </Todo>
+                    )
 
                 })}
             </View>
@@ -18,5 +23,12 @@ class TodoList extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        padding: 15
+    }
+})
 
 export default TodoList

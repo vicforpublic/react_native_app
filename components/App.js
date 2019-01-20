@@ -7,69 +7,142 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, PermissionsAndroid } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import TodoList from './TodoList'
 import AddTodo from './AddTodo';
 
 
-export default class App extends Component {
+class TodoDetails extends Component {
+  static navigationOptions = {
+    ...defaultNavigationOptions,
+    title: 'Todo'
+  }
+
+  render() {
+    return (
+      <View>
+        <Text>
+          {this.props.navigation.getParam('text')}
+        </Text>
+      </View>
+    )
+  }
+}
+
+class Home extends Component {
+  static navigationOptions = {
+    ...defaultNavigationOptions,
+    title: 'Todo App',
+  };
   constructor() {
     super();
 
     let todo1 = {
-      text: "texto 1"
+      text: "texto 1",
+      id: 0
     }
     let todo2 = {
-      text: "texto 2"
+      text: "texto 2",
+      id: 1
     }
 
     this.state = {
       text: "",
-      todos: [todo1, todo2]
-
+      todos: [todo1, todo2],
+      idCount: 1
     }
+    this.requestMapsPermission();
+  }
 
+  async requestMapsPermission() {
+    try {
+      const isGranted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+        'title': "todo app location access",
+        'message': 'We need your location to know here you are'
+      })
+      this.setState({
+        geolocationPermissionGranted: isGranted,
+      })
+
+    } catch (err) {
+      console.error(err)
+      return;
+    }
   }
 
   addTodo = (text) => {
+    let id = this.state.idCount + 1
     this.setState({
-      todos: this.state.todos.concat([{ text: text }])
+      todos: this.state.todos.concat([{ text: text, id: id }]),
+      idCount: id
     })
+
+    if (this.state.geolocationPermissionGranted) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        this.setTodoLocation(id, pos.coords)
+      }, null, { enableHighAccuracy: true })
+
+    }
+  }
+
+  setTodoLocation(id, coords) {
+    const { latitude, logitude } = coords; // useless for now
+    const { todos } = this.state;
+    todos.find(todo =>  {return(todo.id === id)} ).location = coords;
+    this.setState({ todos })
   }
 
   render() {
 
     return (
       <View style={styles.container}>
-        <AddTodo add={this.addTodo}></AddTodo>
-        <TodoList todos={this.state.todos}></TodoList>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+        >
+          <AddTodo add={this.addTodo}></AddTodo>
+          <TodoList
+            todos={this.state.todos}
+            navigation={this.props.navigation}>
+          </TodoList>
+        </ScrollView>
+
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  hor: {
-    flexDirection: 'row',
-    flex: 0.5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  scrollView: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
+
+const defaultNavigationOptions = {
+  headerStyle: {
+    backgroundColor: '#1564bf',
+  },
+  headerTintColor: 'white',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+    color: 'white',
+  },
+}
+
+const AppNavigator = createStackNavigator({
+  Home: { screen: Home },
+  TodoDetails: { screen: TodoDetails }
+})
+
+export default createAppContainer(AppNavigator);
